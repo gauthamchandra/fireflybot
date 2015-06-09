@@ -1,0 +1,29 @@
+{
+  "name": "fireflybot",
+  "version": "0.5.0",
+  "description": "A Slack bot that specializes in Firefly references and curse words. Use it to replace your curses with Firefly curses as well as inject some Firefly fun into your Slack life",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gauthamchandra/fireflybot.git"
+  },
+  "keywords": [
+    "slack",
+    "bot",
+    "firefly",
+    "show"
+  ],
+  "author": "Gautham Chandra",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/gauthamchandra/fireflybot/issues"
+  },
+  "homepage": "https://github.com/gauthamchandra/fireflybot#readme",
+  "dependencies": {
+    "express": "^4.x.x",
+    "body-parser": "^1.x.x"
+  }
+}

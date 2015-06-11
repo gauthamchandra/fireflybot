@@ -1,6 +1,6 @@
 var express = require('express');
 var bodyParser = require('body-parser');
-var fireflybot = require('./fireflybot');
+var curse = require('./curse');
 
 var app = express();
 var port = process.env.PORT || 3000;
@@ -13,7 +13,7 @@ app.get('/', function(request, response) {
 	response.status(200).send('Hello Good Sir!');
 });
 
-app.post('/firefly', fireflybot);
+app.post('/curse', curse);
 
 //wire up a very basic event handler
 app.use(function (error, request, response, next) {

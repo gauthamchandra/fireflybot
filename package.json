@@ -23,7 +23,8 @@
   },
   "homepage": "https://github.com/gauthamchandra/fireflybot#readme",
   "dependencies": {
+    "body-parser": "^1.x.x",
     "express": "^4.x.x",
-    "body-parser": "^1.x.x"
+    "request": "^2.57.0"
   }
 }

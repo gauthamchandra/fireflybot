@@ -1,59 +1,41 @@
-var request = require('request');
+var _ = require('underscore');
+var ffutility = require('./utility');
+
 
 var curses = [
-	{ curse: '笨天生的一堆肉。', pronounciation: 'BUN tyen-shung duh ee-DWAY-RO', translation: 'Stupid Inbred Stack of Meat' },
-	{ curse: '吸牛 piece of crap!', pronounciation: 'Shee-niou piece of crap!', translation: 'Cow sucking piece of crap!' },
-	{ curse: '狒狒的屁眼', pronounciation: 'FAY-FAY duh PEE-yen', translation: 'A baboon\'s asshole' },
-	{ curse: '真沒耐性的佛祖', pronounciation: 'Jen mei NAI-shing duh FWO-tzoo', translation: 'Extraordinarily Impatient Budda'}
+	{ curse: '笨天生的一堆肉。', pronounciation: 'BUN tyen-shung duh ee-DWAY-RO', translation: 'Stupid Inbred Stack of Meat', explicit: true },
+	{ curse: '吸牛 piece of crap!', pronounciation: 'Shee-niou piece of crap!', translation: 'Cow sucking piece of crap!', explicit: false },
+	{ curse: '狒狒的屁眼', pronounciation: 'FAY-FAY duh PEE-yen', translation: 'A baboon\'s asshole', explicit: true },
+	{ curse: '真沒耐性的佛祖', pronounciation: 'Jen mei NAI-shing duh FWO-tzoo', translation: 'Extraordinarily Impatient Budda', explicit: false},
+	{ curse: '熊貓尿', pronounciation: 'Shiong mao niao', translation: 'Panda Piss', explicit: false },
+	{ curse: '青蛙操的流氓', pronounciation: 'Ching-wah TSAO duh liou mahng', translation: 'Frog-Humping Son of a Bitch', explicit: true },
+	{ curse: '流口水的婊子和猴子的笨兒子', pronounciation: 'Liou coe shway duh biao-tze huh hoe-tze duh ur-tze', translation: 'Stupid Son of a Drooling Whore and a Monkey', explicit: true },
+	{ curse: '跟猴子比丟屎', pronounciation: 'Gun HOE-tze bee DIO-se', translation: 'Have a Shit-Throwing Contest with a Monkey', explicit: true }, 
+	{ curse: '喝畜生雜交的髒貨', pronounciation: 'Huh choo-shung tza-jiao duh tzang-huo', translation: 'Filthy Fornicators of Livestock', explicit: false },
+	{ curse: '羔羊中的孤羊', pronounciation: 'Gao yang jong duh goo yang', translation: 'Motherless Goats of All Motherless Goats', explicit: false },
+	{ curse: '我的媽和她的瘋狂的外甥都', pronounciation: 'Wuh duh ma huh tah duh fong kwong duh wai shung', translation: 'Holy Mother of God and All Her Wacky Nephews', explicit: false },
+	{ curse: '太空所有的星球塞盡我的屁股', pronounciation: 'Tai-kong suo-yo duh shing-chiou sai-jin wuh duh pee-goo', translation: 'Shove All the Planets in the Universe Up my Ass', explicit: true },
+	{ curse: '大象爆炸式的拉肚子', pronounciation: 'Da-shiang bao-tza shr duh lah doo-tze', translation: 'The Explosive Diarrhea of an Elephant', explicit: false },
+	{ curse: '神聖的睾丸', pronounciation: 'Shun-SHENG duh gao-WAHN', translation: 'Holy Testicle Tuesday', explicit: false }
 ];
-
-function randomCurse() {
-	return curses[Math.floor(Math.random() * curses.length)];
-}
-
-function send(payload, callback) {
-	var path = process.env.INCOMING_WEBHOOK_PATH;
-
-	request({
-		uri: path,
-		method: 'POST',
-		body: JSON.stringify(payload)
-	}, function (error, response, body) {
-		if (error) {
-			return callback(error);
-		}
-
-		callback(null, response.statusCode, body);
-	});
-}
 
 module.exports = function(request, response, next) {
 	var userName = request.body.user_name;
-	var curse = randomCurse();
+
+	//check if they specified the 'explicit' flag (i.e 'explicit=false')
+	var explicitFlagText = request.body.text.match(/test=.+?(?=\s)/);
+	var isExplicitModeEnabled = false; //for safety's sake, explicit mode is off by default.
+
+	if (explicitFlagText.length > 0) {
+		//if multiple are specified (i.e duplicate flag setting), just grab the last one
+		isExplicitModeEnabled = explicitFlagText[explicitFlagText.length - 1].replace('test=', '') === 'true';
+	}
+
+	var curse = (isExplicitModeEnabled) ? ffutility.getRandomItem(curses) : ffutility.getRandomItem(_(curses, { explicit: false }));
 	var botPayload = {
-		username: 'Mal',
-		icon_url: 'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xaf1/v/t1.0-1/c17.17.216.216/s50x50/33812_129779800419184_6218916_n.jpg?oh=d15dfb1b9ec70741343ec4f0957d09f5&oe=55F36080&__gda__=1441699895_502cc7590b0b41d6d92f97ec6a40f590',
 		text: curse.curse + '(' + curse.translation + ')',
 		channel: request.body.channel_id
 	};
 
-	send(botPayload, function(error, status, body) {
-		if (error) {
-			//some error that has nothing to do with us occured so just pass it on
-			return next(error);
-		} else if (status !== 200) {
-			//something happened so inform user
-			return next(new Error('Incoming Webhook: ' + status + ' ' + body));
-		} else {
-			return response.status(200).end();
-		}
-	});
-
-	// //all bots have the username 'slackbot' so make sure we don't respond to our own messages
-	// //and cause an infinite loop.
-	// if (userName !== 'slackbot') {
-	// 	return response.status(200).json(botPayload);
-	// } else {
-	// 	return response.status(200).end();
-	// }
+	ffutility.sendToSlack(botPayload);
 };

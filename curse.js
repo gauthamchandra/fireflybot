@@ -27,7 +27,7 @@ module.exports = function(request, response, next) {
 		//check if they specified the 'explicit' flag (i.e 'explicit=false')
 		var explicitFlagText = request.body.text.match(/explicit=.+?(?=\s)/);
 
-		if (explicitFlagText.length > 0) {
+		if (explicitFlagText && explicitFlagText.length > 0) {
 			//if multiple are specified (i.e duplicate flag setting), just grab the last one
 			isExplicitModeEnabled = explicitFlagText[explicitFlagText.length - 1].replace('test=', '') === 'true';
 		}	

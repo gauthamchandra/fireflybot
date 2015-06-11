@@ -21,13 +21,10 @@ function onError(error, status, body) {
 }
 
 module.exports = {
-
-
-
 	getRandomItem: function(arr) {
 		return arr[Math.floor(Math.random() * arr.length)];
-	}
-	sendToSlack: function send(payload) {
+	},
+	sendToSlack: function(payload) {
 		var path = process.env.INCOMING_WEBHOOK_PATH;
 
 		//if no username is provided, grab a random Firefly character and use that.

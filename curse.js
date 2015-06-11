@@ -33,11 +33,12 @@ module.exports = function(request, response, next) {
 		}	
 	}
 
-	var curse = (isExplicitModeEnabled) ? ffutility.getRandomItem(curses) : ffutility.getRandomItem(_(curses, { explicit: false }));
+	var curse = (isExplicitModeEnabled) ? ffutility.getRandomItem(curses) : ffutility.getRandomItem(_.where(curses, { explicit: false }));
+	console.log('Curse: ' + curse);
 	var botPayload = {
 		text: curse.curse + '(' + curse.translation + ')',
 		channel: request.body.channel_id
 	};
 
-	ffutility.sendToSlack(botPayload);
+	ffutility.sendToSlack(botPayload, next);
 };

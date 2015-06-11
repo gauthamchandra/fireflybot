@@ -1,6 +1,6 @@
 var request = require('request');
 
-var characters: [
+var characters = [
 		{ name: 'Mal', imgUrl: 'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xaf1/v/t1.0-1/c17.17.216.216/s50x50/33812_129779800419184_6218916_n.jpg?oh=d15dfb1b9ec70741343ec4f0957d09f5&oe=55F36080&__gda__=1441699895_502cc7590b0b41d6d92f97ec6a40f590' },
 		{ name: 'Zoe', imgUrl: 'http://images2.fanpop.com/image/polls/363000/363976_1264269882193_50.jpg'},
 		{ name: 'Wash', imgUrl: 'http://a.deviantart.net/avatars/o/d/oddact.jpg'},

@@ -44,10 +44,10 @@ module.exports = function(request, response, next) {
 	var text = curse.curse;
 
 	if (isPronounciationEnabled) {
-		text = curse.curse + ' (pronounced ' + curse.pronounciation + ')';
+		text = curse.curse + ' (' + curse.pronounciation + ')';
 	}
 
-	text += ' which means: ' + curse.translation;
+	text += ' => ' + curse.translation;
 
 	var botPayload = {
 		text: text,

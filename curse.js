@@ -22,21 +22,35 @@ var curses = [
 module.exports = function(request, response, next) {
 	var userName = request.body.user_name;
 	var isExplicitModeEnabled = false; //for safety's sake, explicit mode is off by default.
+	var isPronounciationEnabled = false;
 
 	if (request.body.text) {
 		//check if they specified the 'explicit' flag (i.e 'explicit=false')
 		var explicitFlagText = request.body.text.match(/explicit=.+?(?=\s)/);
+		var pronounciationText = request.body.text.match(/\bexplain\b/);
 
 		if (explicitFlagText && explicitFlagText.length > 0) {
 			//if multiple are specified (i.e duplicate flag setting), just grab the last one
 			isExplicitModeEnabled = explicitFlagText[explicitFlagText.length - 1].replace('test=', '') === 'true';
 		}	
+
+		if (pronounciationText && pronounciationText.length > 0) {
+			isPronounciationEnabled = true;
+		}
 	}
 
+
 	var curse = (isExplicitModeEnabled) ? ffutility.getRandomItem(curses) : ffutility.getRandomItem(_.where(curses, { explicit: false }));
-	console.log('Curse: ' + curse);
+	var text = curse.curse;
+
+	if (isPronounciationEnabled) {
+		text = curse.curse + ' (pronounced ' + curse.pronounciation + ')';
+	}
+
+	text += ' which means: ' + curse.translation;
+
 	var botPayload = {
-		text: curse.curse + '(' + curse.translation + ')',
+		text: text,
 		channel: request.body.channel_id
 	};
 

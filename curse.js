@@ -27,7 +27,7 @@ module.exports = function(request, response, next) {
 	if (request.body.text) {
 		//check if they specified the 'explicit' flag (i.e 'explicit=false')
 		var explicitFlagText = request.body.text.match(/explicit=.+?(?=\s)/);
-		var pronounciationText = request.body.text.match(/\bexplain\b/);
+		var pronounciationText = request.body.text.match(/\bpronounce\b/);
 
 		if (explicitFlagText && explicitFlagText.length > 0) {
 			//if multiple are specified (i.e duplicate flag setting), just grab the last one

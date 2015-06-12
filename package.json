@@ -25,6 +25,7 @@
   "dependencies": {
     "body-parser": "^1.x.x",
     "express": "^4.x.x",
+    "q": "^1.4.1",
     "request": "^2.57.0",
     "underscore": "^1.8.3"
   }

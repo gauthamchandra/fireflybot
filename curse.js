@@ -40,5 +40,7 @@ module.exports = function(request, response, next) {
 		channel: request.body.channel_id
 	};
 
-	ffutility.sendToSlack(botPayload, next);
+	ffutility.sendToSlack(botPayload, next).then(function() {
+		response.status(200).end();
+	});
 };
